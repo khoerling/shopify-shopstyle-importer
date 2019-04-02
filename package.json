@@ -1,0 +1,35 @@
+{
+  "name": "shopstyle-importer",
+  "version": "1.0.0",
+  "scripts": {
+    "now-build": "next build",
+    "dev": "next",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@shopify/koa-shopify-auth": "^3.1.20",
+    "@shopify/koa-shopify-graphql-proxy": "^2.1.5",
+    "@shopify/polaris": "^3.11.0",
+    "@zeit/next-css": "^1.0.1",
+    "@zeit/next-sass": "^1.0.1",
+    "apollo-boost": "^0.3.1",
+    "bluebird": "^3.5.3",
+    "dotenv-load": "^1.1.0",
+    "graphql": "^14.2.1",
+    "isomorphic-unfetch": "^3.0.0",
+    "koa": "^2.7.0",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.10.1",
+    "lazy.js": "^0.5.1",
+    "moment": "^2.24.0",
+    "next": "latest",
+    "next-env": "^1.1.0",
+    "node-sass": "^4.11.0",
+    "outdent": "^0.7.0",
+    "prisma": "latest",
+    "react": "^16.8.6",
+    "react-apollo": "^2.5.3",
+    "react-dom": "^16.8.6",
+    "sprintf": "^0.1.5"
+  }
+}
