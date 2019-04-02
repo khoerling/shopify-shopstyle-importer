@@ -5,85 +5,48 @@ import { Page, Layout, Button, Card, OptionList, ResourceList, Thumbnail, TextSt
 
 import '../static/index.sass'
 
+var dbf = null
 const
   key   = 'TEST',
-  limit = 25,
+  limit = 1000,
   App   = props => {
     const
-      catSelKey = 'shopstyle-categories-selected',
       [products, setProducts] = useState([]),
-      [categoryChoices, setCategoryChoices] = useState([]),
-      [categoriesSelected, setCategoriesSelected] = useState([]),
       [searchValue, setSearchValue] = useState([]),
-      setProductsFromSelectedCategories = _ => {
-        const
-          products = [],
-          categoriesSelected = get(catSelKey) || []
-        categoriesSelected.forEach(c => {
-          get(c).forEach(p => products.push(p))
-        })
-        setProducts(products)
+      fetchProducts = search => {
+        fetch(`https://api.shopstyle.com/api/v2/products?pid=${key}&fts=${search}&offset=0&limit=${limit}&format=json`)
+          .then(res => res.json())
+          .then(res => {
+            const products = res.products || []
+            set('products', products)
+            setProducts(products)
+          })
       },
-      fetchCategoriesSelected = categories => {
+      searchDidChange = search => {
         // update ui for immediate feedback
-        setCategoriesSelected(categories)
-        set(catSelKey, categories)
-        categories.forEach(cat => {
-          // fetch & save products for each category
-          if (!get(cat))
-            fetch(`https://api.shopstyle.com/api/v2/products?pid=${key}&cat=${cat}&offset=0&limit=${limit}&format=json`)
-              .then(res => res.json())
-              .then(res => {
-                set(cat, res.products)
-                setProductsFromSelectedCategories()
-              })
-        })
+        setSearchValue(search)
+        set('searchValue', search)
+        // fetch & save products for each category
+        if (dbf) clearTimeout(dbf)
+        dbf = setTimeout(_ => fetchProducts(search), 1000)
       }
 
     useEffect(_ => {
       // runs once, eg. componentDidMount
-      // situate categories & products
-      const
-        catKey     = 'shopstyle-categories',
-        categories = get(catKey)
-      if (!categories) {
-        // fetch inital state, no selection/products
-        fetch(`https://api.shopstyle.com/api/v2/categories?pid=${key}&format=json`)
-          .then(res => res.json())
-          .then(res => {
-            const categories = res.categories
-              .map(c => {return {label: c.name, value: c.id}})
-            set(catKey, categories)
-            setCategoryChoices(categories)
-          })
-      } else {
-        // update ui with saved state, restores selection
-        setCategoryChoices(categories)
-        setCategoriesSelected(get(catSelKey) || [])
-        setProductsFromSelectedCategories()
-      }
+      setProducts(get('products') || [])
+      setSearchValue(get('searchValue') || '')
     }, [])
 
     return (
       <Page
-        title="ShopStyle Import"
-        primaryAction={{ url: '/shops', content: 'Refresh' }}>
-        <Card>
-          <OptionList
-            title="Select Categories"
-            options={categoryChoices}
-            onChange={fetchCategoriesSelected}
-            selected={categoriesSelected || []}
-            allowMultiple
-            />
-        </Card>
+        title="ShopStyle Import">
         <Card>
           <ResourceList
             resourceName={{singular: 'product', plural: 'products'}}
-            items={products.filter(p => p.description.indexOf(searchValue) !== -1)}
+            items={products}
             filterControl={<ResourceList.FilterControl
               searchValue={searchValue}
-              onSearchChange={setSearchValue} />
+              onSearchChange={searchDidChange} />
             }
             renderItem={(item) => {
               const
