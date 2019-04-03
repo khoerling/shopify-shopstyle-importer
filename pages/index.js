@@ -7,7 +7,7 @@ import '../static/index.sass'
 
 var dbf = null
 const
-  key   = 'TEST',
+  key        = process.env.SHOPSTYLE_API_KEY || 'TEST',
   limit      = 500,
   categories = ['makeup', 'skin-care'],
   Promise    = require('bluebird'),
