@@ -8,19 +8,27 @@ import '../static/index.sass'
 var dbf = null
 const
   key   = 'TEST',
-  limit = 1000,
-  App   = props => {
+  limit      = 500,
+  categories = ['makeup', 'skin-care'],
+  Promise    = require('bluebird'),
+  App        = props => {
     const
       [products, setProducts] = useState([]),
       [searchValue, setSearchValue] = useState([]),
       fetchProducts = search => {
-        fetch(`https://api.shopstyle.com/api/v2/products?pid=${key}&fts=${search}&offset=0&limit=${limit}&format=json`)
-          .then(res => res.json())
-          .then(res => {
-            const products = res.products || []
-            set('products', products)
-            setProducts(products)
-          })
+        Promise.all(categories.map(cat => {
+          // fetch products for each category
+          return fetch(`https://api.shopstyle.com/api/v2/products?pid=${key}&cat=${cat}&fts=${search}&offset=0&limit=${limit}&format=json`)
+            .then(res => res.json())
+            .then(res => res.products || [])
+        })).then(res => {
+          // combine product results
+          const products = []
+          res.forEach(r => r.forEach(p => products.push(p)))
+          // set & save
+          setProducts(products)
+          set('products', products)
+        })
       },
       searchDidChange = search => {
         // update ui for immediate feedback
@@ -86,7 +94,8 @@ function get(key) {
   return JSON.parse(localStorage.getItem(key))
 }
 function set(key, value) {
-  return localStorage.setItem(key, JSON.stringify(value))
+  localStorage.setItem(key, JSON.stringify(value))
+  return value
 }
 
 export default App
