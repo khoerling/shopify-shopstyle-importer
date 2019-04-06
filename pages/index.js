@@ -92,9 +92,13 @@ const
 
 // ---------
 function get(key) {
+  if (typeof(window) === 'undefined') return false
+  if (!window.localStorage) return false
   return JSON.parse(localStorage.getItem(key))
 }
 function set(key, value) {
+  if (typeof(window) === 'undefined') return false
+  if (!window.localStorage) return false
   localStorage.setItem(key, JSON.stringify(value))
   return value
 }
