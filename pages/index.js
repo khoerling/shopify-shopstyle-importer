@@ -43,6 +43,7 @@ const
       // runs once, eg. componentDidMount
       setProducts(get('products') || [])
       setSearchValue(get('searchValue') || '')
+      toggleClass('loaded')
     }, [])
 
     return (
@@ -96,6 +97,17 @@ function get(key) {
 function set(key, value) {
   localStorage.setItem(key, JSON.stringify(value))
   return value
+}
+
+function toggleClass(className, add=true) {
+  const body = document.body
+  if (add) {
+    if (body.className.indexOf(className) === -1)
+      body.className += ` ${className}`
+  } else {
+    if (body.className.indexOf(className) > -1)
+      body.className = body.className.replace(` ${className}`, '')
+  }
 }
 
 export default App
