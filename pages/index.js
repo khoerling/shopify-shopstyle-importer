@@ -18,7 +18,7 @@ const
       [filters, setFilters]   = useState(get('filters') || []),
       [products, setProducts] = useState(get('products' || [])),
       fetchInitial = _ => {
-        console.log('brands', brands)
+        const brands = get('brands')
         if (!brands.length) {
           // fetch inital brands
           fetch(`https://api.shopstyle.com/api/v2/brands?pid=${key}&format=json`)
@@ -40,9 +40,11 @@ const
         }
       },
       fetchProducts = search => {
-        const fls = filters.length
-          ? filters.map(f => `&fl=b${f.value}`).join('')
-          : ''
+        const
+          filters = get('filters'),
+          fls = filters.length
+            ? filters.map(f => `&fl=b${f.value}`).join('')
+            : ''
         Promise.all(categories.map(cat => {
           // fetch products for each category
           return fetch(`https://api.shopstyle.com/api/v2/products?pid=${key}${fls}&cat=${cat}&fts=${search}&offset=0&limit=${limit}&format=json`)
