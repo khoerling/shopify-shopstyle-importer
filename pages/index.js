@@ -5,14 +5,18 @@ import { Page, Layout, Button, Card, OptionList, ResourceList, Thumbnail, TextSt
 
 import '../static/index.sass'
 
-var dbf = null
+var
+  dbf       = null, // debounce fn
+  isEditing = false  // until polaris improves event-handling
 const
   key        = process.env.SHOPSTYLE_API_KEY || 'TEST',
   limit      = 500,
   categories = ['makeup', 'skin-care'],
+  moment     = require('moment'),
   Promise    = require('bluebird'),
   App        = props => {
     const
+      [added, setAdded]       = useState(get('addedProducts') || {}),
       [search, setSearch]     = useState(get('search') || ''),
       [brands, setBrands]     = useState(get('brands') || []),
       [filters, setFilters]   = useState(get('filters') || []),
@@ -57,6 +61,24 @@ const
           // set & save
           setProducts(set('products', products))
         })
+      },
+      addProduct = id => {
+        // TODO add product to shopify store
+        isEditing = true
+        added[id] = {addedAt: new Date()}
+        setAdded(set('addedProducts', added))
+        setProducts(get('products')) // FIXME trigger update
+        console.log('add', id)
+        setTimeout(_ => isEditing = false, 100)
+      },
+      removeProduct = id => {
+        // TODO remove product from shopify store
+        isEditing = true
+        delete added[id]
+        setAdded(set('addedProducts', added))
+        setProducts(get('products')) // FIXME trigger update
+        console.log('remove', id)
+        setTimeout(_ => isEditing = false, 100)
       },
       filtersDidChange = filters => {
         // set filters & search products
@@ -115,27 +137,37 @@ const
             renderItem={(item) => {
               const
                 {id, name, priceLabel, clickUrl, description, image} = item,
-                media = <Thumbnail size="large" source={image.sizes.Large.url} />,
+                media =
+                  <div className="media">
+                    <Thumbnail size="large" source={image.sizes.Large.url} />
+                    <Subheading>{priceLabel}</Subheading>
+                  </div>,
                 categories = item.categories.reduce((acc, cur) => acc + ` ${cur.shortName}`, '')
               return (
                 <ResourceList.Item
                   id={id}
-                  url={clickUrl}
+                  onClick={e => { if (!isEditing) window.open(clickUrl) }}
                   media={media}
-                  accessibilityLabel={`View details for ${name}`}>
+                  accessibilityLabel={`Details for ${name}`}>
                   <Layout>
                     <Layout.Section>
                       <h3>
                         <TextStyle variation="strong">{name}</TextStyle>
                       </h3>
-                      <Subheading>{priceLabel}</Subheading>
-                      <Caption>{item.brand ? item.brand.name : ''}</Caption>
-                      <Caption>{categories}</Caption>
+                      <Caption>by {item.brand ? item.brand.name : ''} in {categories}</Caption>
                       <div dangerouslySetInnerHTML={{ __html: description }} />
                     </Layout.Section>
-                    <Layout.Section secondary>
-                      <Button outline>Add</Button>
-                    </Layout.Section>
+                    <div className="actions">
+                      {added[id]
+                        ? <div>
+                            <Button outline onClick={_ => removeProduct(id)}>Remove</Button>
+                            <small
+                              title={`${moment(added[id].addedAt).format('MMMM Do YYYY, h:mm:ss a')}`}>
+                                Added {`${moment(added[id].addedAt).fromNow()}`}
+                            </small>
+                          </div>
+                        : <Button onClick={_ => addProduct(id)}>Add</Button>}
+                    </div>
                   </Layout>
                 </ResourceList.Item>
               )
