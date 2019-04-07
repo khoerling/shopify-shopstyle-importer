@@ -13,12 +13,39 @@ const
   Promise    = require('bluebird'),
   App        = props => {
     const
-      [products, setProducts] = useState([]),
-      [searchValue, setSearchValue] = useState([]),
+      [search, setSearch]     = useState(get('search') || ''),
+      [brands, setBrands]     = useState(get('brands') || []),
+      [filters, setFilters]   = useState(get('filters') || []),
+      [products, setProducts] = useState(get('products' || [])),
+      fetchInitial = _ => {
+        console.log('brands', brands)
+        if (!brands.length) {
+          // fetch inital brands
+          fetch(`https://api.shopstyle.com/api/v2/brands?pid=${key}&format=json`)
+            .then(res => res.json())
+            .then(res => {
+              const
+              alpha = (a, b) => {
+                const
+                x = a.label.toLowerCase(),
+                y = b.label.toLowerCase()
+                if (x < y) return -1
+                if (x > y) return 1
+                return 0
+              },
+              brands = res.brands
+                .map(c => {return {label: c.name, value: c.id}})
+              setBrands(set('brands', brands.sort(alpha)))
+            })
+        }
+      },
       fetchProducts = search => {
+        const fls = filters.length
+          ? filters.map(f => `&fl=b${f.value}`).join('')
+          : ''
         Promise.all(categories.map(cat => {
           // fetch products for each category
-          return fetch(`https://api.shopstyle.com/api/v2/products?pid=${key}&cat=${cat}&fts=${search}&offset=0&limit=${limit}&format=json`)
+          return fetch(`https://api.shopstyle.com/api/v2/products?pid=${key}${fls}&cat=${cat}&fts=${search}&offset=0&limit=${limit}&format=json`)
             .then(res => res.json())
             .then(res => res.products || [])
         })).then(res => {
@@ -26,24 +53,35 @@ const
           const products = []
           res.forEach(r => r.forEach(p => products.push(p)))
           // set & save
-          setProducts(products)
-          set('products', products)
+          setProducts(set('products', products))
         })
+      },
+      filtersDidChange = filters => {
+        // set filters & search products
+        setFilters(set('filters', filters))
+        fetchProducts(search)
       },
       searchDidChange = search => {
         // update ui for immediate feedback
-        setSearchValue(search)
-        set('searchValue', search)
-        // fetch & save products for each category
+        setSearch(set('search', search))
+        // debounce fetch & save products for each category
         if (dbf) clearTimeout(dbf)
         dbf = setTimeout(_ => fetchProducts(search), 1000)
-      }
+      },
+      availableFilters = [
+        {
+          key: 'brand',
+          label: 'Brand',
+          operatorText:'is',
+          type: FilterType.Select,
+          options: brands
+        },
+      ]
 
     useEffect(_ => {
       // runs once, eg. componentDidMount
-      setProducts(get('products') || [])
-      setSearchValue(get('searchValue') || '')
       toggleClass('loaded')
+      fetchInitial()
     }, [])
 
     return (
@@ -54,12 +92,27 @@ const
             resourceName={{singular: 'product', plural: 'products'}}
             items={products}
             filterControl={<ResourceList.FilterControl
-              searchValue={searchValue}
+              additionalAction={{
+                content: 'Clear',
+                onAction: _ => {
+                  // reset all local storage
+                  setProducts(set('products', []))
+                  setSearch(set('search', ''))
+                  setFilters(set('filters', []))
+                  setBrands(set('brands', []))
+                  // fetch
+                  fetchInitial()
+                }
+              }}
+              filters={availableFilters}
+              appliedFilters={filters}
+              searchValue={search}
+              onFiltersChange={filtersDidChange}
               onSearchChange={searchDidChange} />
             }
             renderItem={(item) => {
               const
-                {id, name, priceLabel, clickUrl, description, brand, image} = item,
+                {id, name, priceLabel, clickUrl, description, image} = item,
                 media = <Thumbnail size="large" source={image.sizes.Large.url} />,
                 categories = item.categories.reduce((acc, cur) => acc + ` ${cur.shortName}`, '')
               return (
@@ -74,6 +127,7 @@ const
                         <TextStyle variation="strong">{name}</TextStyle>
                       </h3>
                       <Subheading>{priceLabel}</Subheading>
+                      <Caption>{item.brand ? item.brand.name : ''}</Caption>
                       <Caption>{categories}</Caption>
                       <div dangerouslySetInnerHTML={{ __html: description }} />
                     </Layout.Section>
