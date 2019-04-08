@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "now-build": "next build",
-    "dev": "next",
-    "start": "next start"
+    "dev": "node server.js",
+    "build": "next build",
+    "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@dimensionsoftware/koa-shopify-auth": "^3.1.12",
-    "@shopify/koa-shopify-auth": "^3.1.20",
     "@shopify/koa-shopify-graphql-proxy": "^2.1.5",
     "@shopify/polaris": "^3.11.0",
     "@zeit/next-css": "^1.0.1",
@@ -27,7 +27,6 @@
     "next": "latest",
     "next-env": "^1.1.0",
     "node-sass": "^4.11.0",
-    "outdent": "^0.7.0",
     "prisma": "latest",
     "react": "^16.8.6",
     "react-apollo": "^2.5.3",

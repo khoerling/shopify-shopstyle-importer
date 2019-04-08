@@ -782,15 +782,6 @@
     node-mocks-http "^1.5.8"
     tslib "^1.9.3"
 
-"@shopify/koa-shopify-auth@^3.1.20":
-  version "3.1.20"
-  resolved "https://registry.yarnpkg.com/@shopify/koa-shopify-auth/-/koa-shopify-auth-3.1.20.tgz#45467a8024fffd0d8a2a71cf1321f7d5e4bab247"
-  integrity sha512-6NfOuAiwOk52UJy5utCNxfzhfJOukqVUEwejQ7MQuCQgwwUVYLFt/YArxylDM27YKJXIqQm4EN12Bf9EdHeC/A==
-  dependencies:
-    nonce "^1.0.4"
-    safe-compare "^1.1.2"
-    tslib "^1.9.3"
-
 "@shopify/koa-shopify-graphql-proxy@^2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@shopify/koa-shopify-graphql-proxy/-/koa-shopify-graphql-proxy-2.1.5.tgz#44b56ccd017b9a18eceea5d1cb808f7419396ff1"
@@ -5821,11 +5812,6 @@ osenv@0, osenv@^0.1.4:
   dependencies:
     os-homedir "^1.0.0"
     os-tmpdir "^1.0.0"
-
-outdent@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/outdent/-/outdent-0.7.0.tgz#cfd1f1956305141e0cf3e898ada6547373c1997a"
-  integrity sha512-Ue462G+UIFoyQmOzapGIKWS3d/9NHeD/018WGEDZIhN2/VaQpVXbofMcZX0socv1fw4/tmEn7Vd3McOdPZfKzQ==
 
 p-finally@^1.0.0:
   version "1.0.0"
