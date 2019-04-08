@@ -1,11 +1,19 @@
 // next.config.js
 const
-  withCSS  = require('@zeit/next-css'),
-  withSASS = require('@zeit/next-sass')
+  nextEnv    = require('next-env'),
+  dotenvLoad = require('dotenv-load'),
+  withCSS    = require('@zeit/next-css'),
+  withSASS   = require('@zeit/next-sass')
+
+// load & use dotenv
+dotenvLoad()
+const withNextEnv = nextEnv({
+  // TODO custom config
+})
 
 module.exports =
-  withSASS(
-    withCSS({
-      target: 'serverless',
-      cssLoaderOptions: {url: false}
-    }))
+  withNextEnv(
+    withSASS(
+      withCSS({
+        cssLoaderOptions: {url: false}
+      })))
