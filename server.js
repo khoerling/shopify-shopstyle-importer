@@ -1,7 +1,10 @@
 if (!process.browser) // polyfill
   global.fetch = require('isomorphic-unfetch')
 
-const shopifyAuth = require('@shopify/koa-shopify-auth').default
+const
+  shopifyAuth   = require('@dimensionsoftware/koa-shopify-auth').default,
+  verifyRequest = require('@dimensionsoftware/koa-shopify-auth').verifyRequest,
+  graphqlProxy  = require('@shopify/koa-shopify-graphql-proxy').default
 
 const Koa = require('koa')
 const next = require('next')
