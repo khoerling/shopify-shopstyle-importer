@@ -1,0 +1,10 @@
+{
+  "verbose": true,
+  "ignore": ["node_modules", ".next"],
+  "watch": ["server.js", "lib/*", "static/auth.{js,sass}"],
+  "ext": "js json sass",
+  "events": {
+    "start": "./bin/build",
+    "restart": "./bin/build"
+  }
+}

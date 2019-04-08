@@ -17,6 +17,7 @@
     "bluebird": "^3.5.3",
     "dotenv-load": "^1.1.0",
     "graphql": "^14.2.1",
+    "graphql-tag": "^2.10.1",
     "isomorphic-unfetch": "^3.0.0",
     "koa": "^2.7.0",
     "koa-router": "^7.4.0",
