@@ -23,27 +23,31 @@ app
   .then(() => {
     const server = new Koa()
     const router = new Router()
+    server.proxy = true
     server.keys = [ process.env.SERVER_SECRET ]
     server
-      .use(session(server))
+      .use(session({}, server))
       .use(shopifyAuth({
         // if specified, mounts the routes off of the given path
         // eg. /shopify/auth, /shopify/auth/callback
         // defaults to ''
         prefix: '/shopify',
         // your shopify app api key
-        apiKey: process.env.SHOPIFY_API_KEY,
+        apiKey: process.env.NEXT_STATIC_SHOPIFY_API_KEY,
         // your shopify app secret
         secret: process.env.SHOPIFY_SECRET,
         // scopes to request on the merchants store
         scopes: ['write_orders, write_products'],
+        // ask for the token that lasts until uninstallation
+        accessMode: 'offline',
         // callback for when auth is completed
         afterAuth(ctx) {
+          console.log('--------------- begin afterAuth ---------------')
           // add/install shop
           const
             {shop, accessToken} = ctx.session
           console.log(`Authorized ${shop} with token: ${accessToken}`)
-          ctx.redirect('/')
+          ctx.redirect(`/?shop=${shop}`)
         },
       })
     )
@@ -72,10 +76,10 @@ app
       ctx.respond = false
     })
 
-    server.use(async (ctx, next) => {
-      ctx.res.statusCode = 200
-      await next()
-    })
+    // server.use(async (ctx, next) => {
+    //   ctx.res.statusCode = 200
+    //   await next()
+    // })
 
     server.use(router.routes())
     server.listen(port, () => {
