@@ -1,5 +1,4 @@
 import App, {Container} from 'next/app'
-import React from 'react'
 import withApolloClient from '../lib/with-apollo-client'
 import { ApolloProvider } from 'react-apollo'
 import { Page, AppProvider } from '@shopify/polaris'
@@ -11,9 +10,9 @@ global.isClient = typeof(window) !== 'undefined'
 class MyApp extends App {
   render () {
     const
-      apiKey        = process.env.NEXT_STATIC_SHOPIFY_API_KEY,
-      query         = global.isClient ? queryString.parse(window.location.search) : '',
-      shopOrigin    = query.shop || 'http://live-tinted.myshopify.com',
+      apiKey     = process.env.NEXT_STATIC_SHOPIFY_API_KEY,
+      query      = global.isClient ? queryString.parse(window.location.search) : '',
+      shopOrigin = query.shop || 'http://live-tinted.myshopify.com',
       {Component, pageProps, apolloClient} = this.props
     return (
       <Container>

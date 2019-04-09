@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import React, { useRef, useState, useEffect } from 'react'
-import { ApolloProvider, ApolloClient, createNetworkInterface } from 'react-apollo'
+import { useState, useEffect } from 'react'
 import { Page, Layout, Button, Card, OptionList, ResourceList, Thumbnail, TextStyle, Caption, Subheading, FilterType, FooterHelp } from '@shopify/polaris'
 
 import '../static/index.sass'
@@ -109,8 +108,7 @@ const
     }, [])
 
     return (
-      <Page
-        title="ShopStyle Import">
+      <Page>
         <Card>
           <ResourceList
             resourceName={{singular: 'product', plural: 'products'}}
