@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { Page, Layout, Button, Card, OptionList, ResourceList, Thumbnail, TextStyle, Caption, Subheading, FilterType, FooterHelp } from '@shopify/polaris'
+import { AppProvider, Page, Layout, Button, Card, OptionList, ResourceList, Thumbnail, TextStyle, Caption, Subheading, FilterType, FooterHelp } from '@shopify/polaris'
 
 import '../static/index.sass'
 
@@ -108,6 +108,7 @@ const
     }, [])
 
     return (
+      <AppProvider>
       <Page>
         <Card>
           <ResourceList
@@ -176,6 +177,7 @@ const
           <a href="mailto:info@manufactur.co">Looking for help?  Email us!</a>
         </FooterHelp>
       </Page>
+    </AppProvider>
     )
   }
 
