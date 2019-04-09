@@ -800,10 +800,10 @@
   resolved "https://registry.yarnpkg.com/@shopify/polaris-tokens/-/polaris-tokens-2.3.0.tgz#d4e6c12dd83d6f8b1501fbf415268d60151770f2"
   integrity sha512-/jroX2KTRYrQ9Ht7xbJrU+6pEZR2Iq38mXKT6G+9VB13jOv2Yih27MmitEV71E7g03KTIntKCDOWgR/3ECTb1A==
 
-"@shopify/polaris@^3.11.0":
-  version "3.11.0"
-  resolved "https://registry.yarnpkg.com/@shopify/polaris/-/polaris-3.11.0.tgz#86a573e49b3e99c24b37e7a99e408571fdb54c41"
-  integrity sha512-CLYE0GM7mHQPQk9nCKWNrukbODvrV29nCsV+2BZrwqwcm0eek6+eu6OMa2AGkf+u+niidM32NE3c0zmvkaswOA==
+"@shopify/polaris@^3.12.0":
+  version "3.12.0"
+  resolved "https://registry.yarnpkg.com/@shopify/polaris/-/polaris-3.12.0.tgz#900389601f8c48bda0e916fca6b323e125fccbf4"
+  integrity sha512-X8HFX3p8BAQLzTa8+1OhJ6PrzCtxrAcxvzsv+AfbLTBjnY3RhAJNjCWY62d/BUng1H7CwGwZ5GIft2KtiHbSCw==
   dependencies:
     "@babel/runtime" "^7.1.6"
     "@shopify/app-bridge" "^1.1.2"
@@ -1786,6 +1786,11 @@ bluebird@^3.5.0, bluebird@^3.5.1, bluebird@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.3.tgz#7d01c6f9616c9a51ab0f8c549a79dfe6ec33efa7"
   integrity sha512-/qKPUQlaW1OyR51WeCPBvRnAlnZFUJkCSG5HzGnuIqhgyJtF+T94lFnn33eiazjRm2LAHVy2guNnaq48X9SJuw==
+
+bluebird@^3.5.4:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.4.tgz#d6cc661595de30d5b3af5fcedd3c0b3ef6ec5714"
+  integrity sha512-FG+nFEZChJrbQ9tIccIfZJBz3J7mLrAhxakAbnrJWn8d7aKOC+LWifa0G+p4ZqKp4y13T7juYvdhq9NzKdsrjw==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
@@ -6681,10 +6686,10 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-apollo@^2.5.3:
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.5.3.tgz#9844a522894a6e0392f6a982c6052348d9a4ae12"
-  integrity sha512-sBh7M3h4xdbck8NFnn1nlUG0mD0hCTeIcvov4A8hagxjOyTVSakoum+DP6rYNaHuAZFDS3oNurNNSbGZmgoU6g==
+react-apollo@^2.5.4:
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.5.4.tgz#4b5ad2e9e38001521d072445acdb5b3b5489b22d"
+  integrity sha512-olH9zYijOXVfj14hD7bQlZ0POBJchxg2e+mfnxEiEdqZra4+58SfIY0KPhmM9jqbeeusc6J/P4zzWIHt5DdNDg==
   dependencies:
     apollo-utilities "^1.2.1"
     hoist-non-react-statics "^3.3.0"
