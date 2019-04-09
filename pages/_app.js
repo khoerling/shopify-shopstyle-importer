@@ -1,5 +1,5 @@
 import App, {Container} from 'next/app'
-import { AppProvider } from '@shopify/polaris'
+import { Page, AppProvider } from '@shopify/polaris'
 import queryString from 'query-string'
 import '@shopify/polaris/styles.css'
 
@@ -10,12 +10,14 @@ class MyApp extends App {
     const
       apiKey     = process.env.NEXT_STATIC_SHOPIFY_API_KEY,
       query      = global.isClient ? queryString.parse(window.location.search) : '',
-      shopOrigin = query.shop || 'https://live-tinted.myshopify.com',
+      shopOrigin = query.shop || 'http://live-tinted.myshopify.com',
       {Component, pageProps} = this.props
     return (
-        <AppProvider shopOrigin={isClient ? shopOrigin : ''}>
-          <Component {...pageProps} />
+      <Container>
+        <AppProvider shopOrigin={isClient ? window : ''}>
+            <Component {...pageProps} />
         </AppProvider>
+      </Container>
     )
   }
 }
