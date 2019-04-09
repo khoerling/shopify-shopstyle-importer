@@ -21,7 +21,7 @@ const
       [filters, setFilters]   = useState(get('filters') || []),
       [products, setProducts] = useState(get('products' || [])),
       fetchInitial = _ => {
-        const brands = get('brands')
+        const brands = get('brands') || []
         if (!brands.length) {
           // fetch inital brands
           fetch(`https://api.shopstyle.com/api/v2/brands?pid=${key}&format=json`)
@@ -44,7 +44,7 @@ const
       },
       fetchProducts = search => {
         const
-          filters = get('filters'),
+          filters = get('filters') || [],
           fls = filters.length
             ? filters.map(f => `&fl=b${f.value}`).join('')
             : ''
@@ -66,7 +66,7 @@ const
         isEditing = true
         added[id] = {addedAt: new Date()}
         setAdded(set('addedProducts', added))
-        setProducts(get('products')) // FIXME trigger update
+        setProducts(get('products') || []) // FIXME trigger update
         console.log('add', id)
         setTimeout(_ => isEditing = false, 100)
       },
@@ -75,7 +75,7 @@ const
         isEditing = true
         delete added[id]
         setAdded(set('addedProducts', added))
-        setProducts(get('products')) // FIXME trigger update
+        setProducts(get('products') || []) // FIXME trigger update
         console.log('remove', id)
         setTimeout(_ => isEditing = false, 100)
       },
@@ -112,7 +112,7 @@ const
         <Card>
           <ResourceList
             resourceName={{singular: 'product', plural: 'products'}}
-            items={products}
+            items={products || []}
             filterControl={<ResourceList.FilterControl
               additionalAction={{
                 content: 'Clear',
