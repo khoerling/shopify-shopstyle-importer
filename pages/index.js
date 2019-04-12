@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import gql from 'graphql-tag'
+import { ApolloConsumer } from 'react-apollo'
 import { Page, Layout, Button, Card, OptionList, ResourceList, Thumbnail, TextStyle, Caption, Subheading, FilterType, FooterHelp } from '@shopify/polaris'
 
 import '../static/index.sass'
@@ -62,12 +64,28 @@ const
         })
       },
       addProduct = id => {
-        // TODO add product to shopify store
         isEditing = true
-        added[id] = {addedAt: new Date()}
-        setAdded(set('addedProducts', added))
-        setProducts(get('products') || []) // FIXME trigger update
-        console.log('add', id)
+        const
+          product = {
+            "input": {
+              "title": "Sweet new product",
+              "productType": "Snowboard",
+              "vendor": "JadedPixel",
+              "metafields": {
+                "namespace": "shopstyle",
+                "key": "id",
+                "value": id,
+                "valueType": "STRING"
+              }
+            }
+          }
+        productCreate(props.client, product, data => {
+          // on success:
+          added[id] = {addedAt: new Date()}
+          setAdded(set('addedProducts', added))
+          setProducts(get('products') || []) // FIXME trigger update
+          console.log('added', id, data)
+        })
         setTimeout(_ => isEditing = false, 100)
       },
       removeProduct = id => {
@@ -203,4 +221,24 @@ function toggleClass(className, add=true) {
   }
 }
 
+function productCreate(client, input={}) {
+  return client.mutate({
+    mutation: gql`
+      mutation($input: ProductInput!) {
+        productCreate(input: $input) {
+          product {
+            id
+          }
+        }
+      }
+    `,
+    variables: { input },
+    onCompleted: data => {
+      console.log('completed productCreate:', data)
+    },
+    onError: err => {
+      console.log('error productCreate:', err)
+    }
+  })
+}
 export default App

@@ -18,7 +18,7 @@ class MyApp extends App {
       <Container>
         <AppProvider shopOrigin={isClient ? window : ''}>
           <ApolloProvider client={apolloClient}>
-            <Component {...pageProps} />
+            <Component apiKey={apiKey} client={apolloClient} {...pageProps} />
           </ApolloProvider>
         </AppProvider>
       </Container>
