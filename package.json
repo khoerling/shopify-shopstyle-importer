@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@dimensionsoftware/koa-shopify-auth": "^3.1.12",
+    "@koa/cors": "^3.0.0",
     "@shopify/koa-shopify-graphql-proxy": "^2.1.5",
     "@shopify/polaris": "^3.12.0",
     "@zeit/next-css": "^1.0.1",

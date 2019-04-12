@@ -10,6 +10,7 @@ const Koa = require('koa')
 const next = require('next')
 const Router = require('koa-router')
 const session = require('koa-session')
+const cors = require('@koa/cors')
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
@@ -26,6 +27,11 @@ app
     server.proxy = true
     server.keys = [ process.env.SERVER_SECRET ]
     server
+      .use(cors({
+        origin: (ctx) => {
+          return '*'
+        },
+      }))
       .use(session({}, server))
       .use(shopifyAuth({
         // if specified, mounts the routes off of the given path
