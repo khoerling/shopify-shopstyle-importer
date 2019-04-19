@@ -4,9 +4,11 @@ if (!process.browser) // polyfill
 const
   shopifyAuth   = require('@dimensionsoftware/koa-shopify-auth').default,
   verifyRequest = require('@dimensionsoftware/koa-shopify-auth').verifyRequest,
-  graphqlProxy  = require('@shopify/koa-shopify-graphql-proxy').default
+  graphqlProxy  = require('@shopify/koa-shopify-graphql-proxy').default,
+  Shopify       = require('shopify-api-node')
 
 const Koa = require('koa')
+const bodyParser = require('koa-bodyparser')
 const next = require('next')
 const Router = require('koa-router')
 const session = require('koa-session')
@@ -32,6 +34,7 @@ app
           return '*'
         },
       }))
+      .use(bodyParser())
       .use(session({}, server))
       .use(shopifyAuth({
         // if specified, mounts the routes off of the given path
@@ -65,6 +68,21 @@ app
         client              = initApollo()
       console.log(`Uninstalled ${shop} with token: ${accessToken}`)
       ctx.redirect('/')
+    })
+
+    router.post('/products', async ctx => {
+      // TODO create non-buy'able product
+      const product = ctx.request.body
+      console.log(product)
+      shopify.product.create(product)
+        .then(p => {
+          console.log('created prod', p)
+          ctx.body = { success: true }
+        })
+        .catch(error => {
+          console.log('catch')
+          ctx.body = { success: false, error }
+        })
     })
 
     router.get('/a', async ctx => {

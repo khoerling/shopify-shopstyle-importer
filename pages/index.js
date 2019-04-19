@@ -63,28 +63,29 @@ const
           setProducts(set('products', products))
         })
       },
-      addProduct = id => {
+      addProduct = item => {
         isEditing = true
         const
           product = {
-            "input": {
-              "title": "Sweet new product",
-              "productType": "Snowboard",
-              "vendor": "JadedPixel",
-              "metafields": {
-                "namespace": "shopstyle",
-                "key": "id",
-                "value": id,
-                "valueType": "STRING"
-              }
+            "title": item.name,
+            "productType": item.categories[0].name,
+            "vendor": item.retailer.name,
+            "metafields": {
+              "namespace": "shopstyle",
+              "key": "id",
+              "value": item.id,
+              "valueType": "STRING"
             }
           }
-        productCreate(props.client, product, data => {
-          // on success:
-          added[id] = {addedAt: new Date()}
-          setAdded(set('addedProducts', added))
-          setProducts(get('products') || []) // FIXME trigger update
-          console.log('added', id, data)
+        productCreate(product, res => {
+          if (res.success) {
+            added[item.id] = {addedAt: new Date()}
+            setAdded(set('addedProducts', added))
+            setProducts(get('products') || []) // FIXME trigger update
+            console.log('added', item.id, res)
+          } else {
+            console.warn('error', res)
+          }
         })
         setTimeout(_ => isEditing = false, 100)
       },
@@ -182,7 +183,7 @@ const
                                 Added {`${moment(added[id].addedAt).fromNow()}`}
                             </small>
                           </div>
-                        : <Button onClick={_ => addProduct(id)}>Add</Button>}
+                        : <Button onClick={_ => addProduct(item)}>Add</Button>}
                     </div>
                   </Layout>
                 </ResourceList.Item>
@@ -221,24 +222,15 @@ function toggleClass(className, add=true) {
   }
 }
 
-function productCreate(client, input={}) {
-  return client.mutate({
-    mutation: gql`
-      mutation($input: ProductInput!) {
-        productCreate(input: $input) {
-          product {
-            id
-          }
-        }
-      }
-    `,
-    variables: { input },
-    onCompleted: data => {
-      console.log('completed productCreate:', data)
+function productCreate(input={}, cb) {
+  fetch(`/products`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
     },
-    onError: err => {
-      console.log('error productCreate:', err)
-    }
+    body: JSON.stringify({ input })
   })
+  .then(res => res.json())
+  .then(cb)
 }
 export default App
