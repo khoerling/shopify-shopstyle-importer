@@ -70,18 +70,33 @@ app
       ctx.redirect('/')
     })
 
-    router.post('/products', async ctx => {
-      // TODO create non-buy'able product
-      const product = ctx.request.body
-      console.log(product)
-      shopify.product.create(product)
+    router.delete('/products', async ctx => {
+      // delete non-buy'able product
+      const id = ctx.request.body.id
+      return shopify.product.delete(id)
         .then(p => {
-          console.log('created prod', p)
+          console.log('product.delete', id)
           ctx.body = { success: true }
         })
-        .catch(error => {
-          console.log('catch')
-          ctx.body = { success: false, error }
+        .catch(err => {
+          ctx.status = 500
+          console.warn('product.delete', err.response.body)
+          ctx.body = { success: false, error: err.response.body }
+        })
+    })
+
+    router.post('/products', async ctx => {
+      // create non-buy'able product
+      const product = ctx.request.body
+      return shopify.product.create(product)
+        .then(p => {
+          console.log('product.create', p.id)
+          ctx.body = { success: true, id: p.id }
+        })
+        .catch(err => {
+          ctx.status = 500
+          console.warn('product.create', err.response.body)
+          ctx.body = { success: false, error: err.response.body }
         })
     })
 

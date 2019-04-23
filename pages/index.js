@@ -68,21 +68,26 @@ const
         const
           product = {
             "title": item.name,
-            "productType": item.categories[0].name,
+            "body_html": item.description,
+            "product_type": 'Tinty Picks',
             "vendor": item.retailer.name,
-            "metafields": {
+            "images": [
+              {
+                "src": item.image.sizes.Large.url,
+              }
+            ],
+            "metafields": [{
               "namespace": "shopstyle",
-              "key": "id",
+              "key": "shopstyle-id",
               "value": item.id,
-              "valueType": "STRING"
-            }
+              "value_type": "STRING"
+            }]
           }
         productCreate(product, res => {
           if (res.success) {
-            added[item.id] = {addedAt: new Date()}
+            added[item.id] = {addedAt: new Date(), shopify_id: res.id}
             setAdded(set('addedProducts', added))
             setProducts(get('products') || []) // FIXME trigger update
-            console.log('added', item.id, res)
           } else {
             console.warn('error', res)
           }
@@ -92,10 +97,15 @@ const
       removeProduct = id => {
         // TODO remove product from shopify store
         isEditing = true
-        delete added[id]
-        setAdded(set('addedProducts', added))
-        setProducts(get('products') || []) // FIXME trigger update
-        console.log('remove', id)
+        productRemove(added[id].shopify_id, res => {
+          if (res.success) {
+            delete added[id]
+            setAdded(set('addedProducts', added))
+            setProducts(get('products') || []) // FIXME trigger update
+          } else {
+            console.warn('error', id)
+          }
+        })
         setTimeout(_ => isEditing = false, 100)
       },
       filtersDidChange = filters => {
@@ -222,15 +232,27 @@ function toggleClass(className, add=true) {
   }
 }
 
-function productCreate(input={}, cb) {
+function productCreate(product={}, cb) {
   fetch(`/products`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ input })
+    body: JSON.stringify(product)
   })
   .then(res => res.json())
   .then(cb)
+}
+
+function productRemove(id, cb) {
+  fetch(`/products`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({id})
+  })
+    .then(res => res.json())
+    .then(cb)
 }
 export default App
