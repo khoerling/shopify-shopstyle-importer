@@ -257,8 +257,8 @@ function productRemove(id, cb) {
     .then(cb)
 }
 
-function tagFor(s) {
-  return s.split(/[\s-]/).join(',')
+function tagFor(s='') {
+  return s.toString().split(/[\s-]/).join(',')
 }
 
 export default App
