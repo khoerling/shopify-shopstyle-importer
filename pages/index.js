@@ -70,8 +70,8 @@ const
             "title": item.name,
             "body_html": item.description,
             "product_type": 'Tinty Picks',
-            "vendor": item.brand.name,
-            "tags": `tinty,${tagFor(item.brand.name)},${tagFor(item.retailer.name)},${tagFor(item.urlIdentifier)}`,
+            "vendor": item.brand ? item.brand.name : '',
+            "tags": `tinty,${tagFor(item.brand ? item.brand.name : '')},${tagFor(item.retailer ? item.retailer.name : '')},${tagFor(item.urlIdentifier)}`,
             "images": [
               {
                 "src": item.image.sizes.Large.url,
