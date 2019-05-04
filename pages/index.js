@@ -71,6 +71,7 @@ const
             "body_html": item.description,
             "product_type": 'Tinty Picks',
             "vendor": item.brand.name,
+            "tags": `tinty,${tagFor(item.brand.name)},${tagFor(item.retailer.name)},${tagFor(item.urlIdentifier)}`,
             "images": [
               {
                 "src": item.image.sizes.Large.url,
@@ -255,4 +256,9 @@ function productRemove(id, cb) {
     .then(res => res.json())
     .then(cb)
 }
+
+function tagFor(s) {
+  return s.split(/[\s-]/).join(',')
+}
+
 export default App
