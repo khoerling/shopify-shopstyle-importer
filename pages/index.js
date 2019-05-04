@@ -70,7 +70,7 @@ const
             "title": item.name,
             "body_html": item.description,
             "product_type": 'Tinty Picks',
-            "vendor": item.retailer.name,
+            "vendor": item.brand.name,
             "images": [
               {
                 "src": item.image.sizes.Large.url,
